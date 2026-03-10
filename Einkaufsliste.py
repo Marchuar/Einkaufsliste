@@ -7,6 +7,28 @@ import webbrowser
 # Сохраняем оригинальные тексты элементов
 original_texts = {}
 
+# Переменная для отслеживания текущей темы
+dark_mode = False
+
+# Цветовая схема
+light_colors = {
+    'bg': 'SystemButtonFace',
+    'fg': 'black',
+    'button_bg': 'SystemButtonFace',
+    'button_fg': 'black',
+    'listbox_bg': 'white',
+    'listbox_fg': 'black'
+}
+
+dark_colors = {
+    'bg': '#2b2b2b',
+    'fg': '#ffffff',
+    'button_bg': '#3d3d3d',
+    'button_fg': '#ffffff',
+    'listbox_bg': '#1e1e1e',
+    'listbox_fg': '#ffffff'
+}
+
 def shuffle_text(text):
     """Перемешивает буквы в тексте"""
     if not text:
@@ -14,6 +36,28 @@ def shuffle_text(text):
     chars = list(text)
     random.shuffle(chars)
     return ''.join(chars)
+
+def toggle_dark_mode():
+    """Переключает между светлой и тёмной темой"""
+    global dark_mode
+    dark_mode = not dark_mode
+    apply_theme()
+    disco_effect()
+
+def apply_theme():
+    """Применяет выбранную тему к элементам интерфейса"""
+    colors = dark_colors if dark_mode else light_colors
+
+    fenster.configure(bg=colors['bg'])
+    Kauf_label.config(bg=colors['bg'], fg=colors['fg'])
+    eingabefeld1.config(bg=colors['listbox_bg'], fg=colors['listbox_fg'], insertbackground=colors['listbox_fg'])
+    Hinzufugen_button.config(bg=colors['button_bg'], fg=colors['button_fg'])
+    ausgabefeld.config(bg=colors['listbox_bg'], fg=colors['listbox_fg'])
+    Speichern_button.config(bg=colors['button_bg'], fg=colors['button_fg'])
+    Laden_button.config(bg=colors['button_bg'], fg=colors['button_fg'])
+    Loschen_button.config(bg=colors['button_bg'], fg=colors['button_fg'])
+    Rickroll_button.config(bg=colors['button_bg'], fg=colors['button_fg'])
+    DarkMode_checkbox.config(bg=colors['bg'], fg=colors['fg'], selectcolor=colors['bg'])
 
 def disco_effect():
     """Эффект дискотеки: яркие цвета, ритмичная музыка и перемешивание букв"""
@@ -40,7 +84,7 @@ def disco_effect():
             fenster.after(100, lambda: animate_disco(frame + 1))
         else:
             # Возврат к нормальному цвету и текстам
-            fenster.configure(bg='SystemButtonFace')
+            apply_theme()
             Kauf_label.config(text=original_texts['label'])
             Hinzufugen_button.config(text=original_texts['hinzufugen'])
             Speichern_button.config(text=original_texts['speichern'])
@@ -105,6 +149,7 @@ Speichern_button = Button(fenster, text = "Speichern", command=speichern)
 Laden_button = Button(fenster, text = "Laden", command=laden)
 Loschen_button = Button(fenster, text = "Löschen", command=loschen)
 Rickroll_button = Button(fenster, text = "сиси", command=rickroll)
+DarkMode_checkbox = Checkbutton(fenster, text="Тёмная тема", command=toggle_dark_mode)
 
 # Сохраняем оригинальные тексты
 original_texts['label'] = "Auf die Einkaufsliste: "
@@ -121,5 +166,8 @@ Speichern_button.grid(row=3, column=0)
 Laden_button.grid(row=4, column=0)
 Loschen_button.grid(row=5, column=0)
 Rickroll_button.grid(row=6, column=0)
+DarkMode_checkbox.grid(row=7, column=0)
 ausgabefeld.grid(row=3, column=1, rowspan=3)
+
+apply_theme()
 mainloop()
