@@ -28,6 +28,7 @@ def disco_effect():
 
             # Эффект перемешивания букв
             Kauf_label.config(text=shuffle_text(original_texts['label']))
+            count_label.config(text=shuffle_text(original_texts['count']))
             Hinzufugen_button.config(text=shuffle_text(original_texts['hinzufugen']))
             Speichern_button.config(text=shuffle_text(original_texts['speichern']))
             Laden_button.config(text=shuffle_text(original_texts['laden']))
@@ -42,6 +43,7 @@ def disco_effect():
             # Возврат к нормальному цвету и текстам
             fenster.configure(bg='SystemButtonFace')
             Kauf_label.config(text=original_texts['label'])
+            count_label.config(text=original_texts['count'])
             Hinzufugen_button.config(text=original_texts['hinzufugen'])
             Speichern_button.config(text=original_texts['speichern'])
             Laden_button.config(text=original_texts['laden'])
@@ -50,11 +52,19 @@ def disco_effect():
 
     animate_disco()
 
+def update_count():
+    """Обновляет текст метки с количеством элементов"""
+    count = ausgabefeld.size()
+    text = f"Items: {count}"
+    count_label.config(text=text)
+    original_texts['count'] = text
+
 def hinzufugen():
   Artikel = eingabefeld1.get()
   if Artikel:  # Проверка, что поле не пусто
     ausgabefeld.insert(END, Artikel)
     eingabefeld1.delete(0, END)
+    update_count()
     disco_effect()
 
 def speichern():
@@ -74,6 +84,7 @@ def laden():
             ausgabefeld.delete(0, END)
             for artikel in Artikeln:
                 ausgabefeld.insert(END, artikel)
+            update_count()
             print("Список загружен из liste.json")
         else:
             print("Файл liste.json не найден")
@@ -84,6 +95,7 @@ def loschen():
     selected = ausgabefeld.curselection()
     if selected:
         ausgabefeld.delete(selected[0])
+        update_count()
 
 def rickroll():
     """Открывает рикролл в браузере"""
@@ -98,6 +110,7 @@ fenster = Tk()
 fenster.title("Einkaufsliste")
 
 Kauf_label = Label(fenster, text = "Auf die Einkaufsliste: ")
+count_label = Label(fenster, text = "Items: 0")
 eingabefeld1 = Entry(fenster, bd=5, width = 50)
 Hinzufugen_button = Button(fenster, text = "Hinzufügen", command=hinzufugen)
 ausgabefeld = Listbox(fenster, bd=5, width=50, height=5)
@@ -108,6 +121,7 @@ Rickroll_button = Button(fenster, text = "сиси", command=rickroll)
 
 # Сохраняем оригинальные тексты
 original_texts['label'] = "Auf die Einkaufsliste: "
+original_texts['count'] = "Items: 0"
 original_texts['hinzufugen'] = "Hinzufügen"
 original_texts['speichern'] = "Speichern"
 original_texts['laden'] = "Laden"
@@ -122,4 +136,5 @@ Laden_button.grid(row=4, column=0)
 Loschen_button.grid(row=5, column=0)
 Rickroll_button.grid(row=6, column=0)
 ausgabefeld.grid(row=3, column=1, rowspan=3)
+count_label.grid(row=2, column=1)
 mainloop()
