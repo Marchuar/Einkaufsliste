@@ -59,6 +59,19 @@ def update_count():
     count_label.config(text=text)
     original_texts['count'] = text
 
+def dice_throw():
+    """Симулирует бросок кубика"""
+    def animate_dice(count=0):
+        if count < 10:  # 10 кадров анимации
+            result = random.randint(1, 6)
+            dice_label.config(text=f"🎲: {result}")
+            fenster.after(100, lambda: animate_dice(count + 1))
+        else:
+            final_result = random.randint(1, 6)
+            dice_label.config(text=f"🎲: {final_result}")
+    
+    animate_dice()
+
 def hinzufugen():
   Artikel = eingabefeld1.get()
   if Artikel:  # Проверка, что поле не пусто
@@ -66,6 +79,7 @@ def hinzufugen():
     eingabefeld1.delete(0, END)
     update_count()
     disco_effect()
+    dice_throw()
 
 def speichern():
     Artikeln = list(ausgabefeld.get(0, END))
@@ -118,6 +132,7 @@ Speichern_button = Button(fenster, text = "Speichern", command=speichern)
 Laden_button = Button(fenster, text = "Laden", command=laden)
 Loschen_button = Button(fenster, text = "Löschen", command=loschen)
 Rickroll_button = Button(fenster, text = "сиси", command=rickroll)
+dice_label = Label(fenster, text = "🎲: -")
 
 # Сохраняем оригинальные тексты
 original_texts['label'] = "Auf die Einkaufsliste: "
@@ -137,4 +152,5 @@ Loschen_button.grid(row=5, column=0)
 Rickroll_button.grid(row=6, column=0)
 ausgabefeld.grid(row=3, column=1, rowspan=3)
 count_label.grid(row=2, column=1)
+dice_label.grid(row=7, column=0)
 mainloop()
